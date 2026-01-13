@@ -48,9 +48,26 @@ const errors = validationResult(req);
  }
 
  const token = await user.generateAuthToken();
- console.log(token);
     res.cookie('token', token);
-    res.status(200).json({  token , user});
+    
+    // Check if user is admin and return appropriate response
+    if (user.isAdmin) {
+        res.status(200).json({ 
+            message: 'Admin login successful',
+            token, 
+            user,
+            isAdmin: true,
+            redirectTo: '/admin-panel'
+        });
+    } else {
+        res.status(200).json({ 
+            message: 'Login successful',
+            token, 
+            user,
+            isAdmin: false,
+            redirectTo: '/dashboard'
+        });
+    }
 
  
 }
